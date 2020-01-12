@@ -1,0 +1,23 @@
+{
+	"name": "execu",
+	"version": "1.0.0",
+	"description": "The API of the freshloop system aimed to run on the executing units",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"author": "Florian Götzrath <info@floriangoetzrath.de>",
+	"license": "ISC",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"body-parser": "^1.19.0",
+		"ejs": "^3.0.1",
+		"express": "^4.17.1",
+		"express-session": "^1.17.0",
+		"get-port": "^5.1.0",
+		"jsonwebtoken": "^8.5.1",
+		"method-override": "^3.0.0",
+		"passport": "^0.4.1",
+		"passport-jwt": "^4.0.0"
+	}
+}
