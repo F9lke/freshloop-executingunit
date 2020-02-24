@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 const key = require('../../config/keys').key;
 const secretOrKey = require('../../config/keys').secretOrKey;
@@ -71,6 +72,26 @@ router.post('/authenticate', (req, res) => {
 				}
 			);
 		});
+	});
+});
+
+/**
+ * @route   DELETE api/auth/terminate
+ * @desc    Deletes any token or trace referencing to the once established connection
+ * @access  private
+ */
+router.delete('/terminate', passport.authenticate('jwt', { session: false }), (req, res) => {
+	const storePath = __dirname + '/../../config/store.json';
+	
+	// Delete the store.json file so its filestats won't show any edits (@see api/auth/authenticate)
+	fs.unlink(storePath, err => {
+		if(err) return res.status(400).json({ err: err });
+		
+		// Recreate the file with a boilerplate content
+		fs.writeFile(storePath, JSON.stringify({ key: "" }), err => {
+			if(err) return res.status(400).json({ err: err });
+			else return res.status(200).json({ success: true });
+		})
 	});
 });
 
