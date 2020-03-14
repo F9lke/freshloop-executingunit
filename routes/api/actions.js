@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+
 const MotorController = require('../../util/motor');
+const LEDController = require('../../util/led');
 
 // Load Validation
 const validateSprayParams = require('../../validation/spray');
@@ -24,7 +26,9 @@ router.post("/spray", passport.authenticate('jwt', { session: false }), (req, re
 	
 	// Issue commands to the trigger motor
 	const Motor = new MotorController();
-	Motor.triggerMotorSprayAtPosition(1, () => {});
+	const LED = new LEDController();
+	
+	LED.lightLED(1, () => Motor.triggerMotorSprayAtPosition(1, () => LED.darkenLED(1)));
 });
 
 /**
@@ -45,7 +49,11 @@ router.post('/sprayAtPosition', passport.authenticate('jwt', { session: false })
 	
 	// Issue commands to the motors
 	const Motor = new MotorController();
-	Motor.triggerMotorSprayAtPosition(req.body.position, () => {});
+	const LED = new LEDController();
+	
+	const pos = parseInt(req.body.position);
+	
+	LED.lightLED(pos, () => Motor.triggerMotorSprayAtPosition(pos, () => LED.darkenLED(pos)));
 });
 
 module.exports = router;
